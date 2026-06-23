@@ -9,13 +9,9 @@ A production-grade, end-to-end computer vision and data engineering pipeline for
 The codebase is organized into clean, modular subdirectories:
 
 ```text
-├── colab/                    # YOLO Colab Config, Notebooks & Inference
+├── colab/                    # YOLO Colab Notebooks & Inference
 │   ├── generate_dataset.ipynb# Phase 1: High-Fidelity SVG Extraction & Domain Randomization
 │   ├── train_model.ipynb     # Phase 2: Model Training, ONNX Benchmarks & Real-World Evaluation
-│   ├── dataset.yaml          # YOLO dataset split classes configuration
-│   ├── train_config.yaml     # Custom hyperparameters & CAD augmentations
-│   ├── export_model.py       # Exporter (best.pt -> ONNX, TorchScript, PKL)
-│   ├── package_model.py      # Packager (curves, logs, dataset and model zips)
 │   ├── test_real_floorplan.py# Command-line utility for local inference
 │   ├── metrics.json          # Metrics schema template
 │   └── door_metadata.json    # Target metadata schema template
