@@ -1,0 +1,17 @@
+# Core Submodule and Data Processing Dependencies
+opencv-python>=4.8.0
+numpy>=1.23.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+svgpathtools>=1.6.0
+cairosvg>=2.7.0
+pandas>=2.0.0
+pyyaml>=6.0.0
+
+# YOLO Training, Export and Inference Dependencies
+ultralytics>=8.3.0
+torch>=2.1.0
+onnx>=1.12.0
+onnxslim>=0.1.71
+onnxruntime>=1.16.0
+kagglehub>=0.1.0
