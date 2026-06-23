@@ -1,0 +1,30 @@
+[
+  {
+    "door_id": 104,
+    "door_type": "Swing Beside",
+    "orientation": 90,
+    "opening": "CW",
+    "bbox": [120.5, 340.2, 185.0, 405.5],
+    "polygon": [
+      [120.5, 340.2],
+      [185.0, 340.2],
+      [185.0, 405.5],
+      [120.5, 405.5]
+    ],
+    "source_svg": "plan_104.svg"
+  },
+  {
+    "door_id": 105,
+    "door_type": "Double Swing",
+    "orientation": 180,
+    "opening": "CCW",
+    "bbox": [450.0, 110.0, 570.0, 170.0],
+    "polygon": [
+      [450.0, 110.0],
+      [570.0, 110.0],
+      [570.0, 170.0],
+      [450.0, 170.0]
+    ],
+    "source_svg": "plan_104.svg"
+  }
+]

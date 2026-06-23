@@ -1,0 +1,20 @@
+{
+  "model_type": "YOLO11s-Seg",
+  "dataset": "SVG Synthetic Floorplans",
+  "metrics": {
+    "box": {
+      "mAP50": 0.9452,
+      "mAP50-95": 0.8123,
+      "precision": 0.9250,
+      "recall": 0.9120,
+      "f1": 0.9185
+    },
+    "mask": {
+      "mAP50": 0.9288,
+      "mAP50-95": 0.7891,
+      "precision": 0.9110,
+      "recall": 0.8980,
+      "f1": 0.9045
+    }
+  }
+}

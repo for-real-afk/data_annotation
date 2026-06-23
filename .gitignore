@@ -1,0 +1,40 @@
+# Core Datasets
+dataset/
+yolo_dataset/
+good_ones_dataset/
+local_dataset_output/
+local_test_data/
+output/
+
+# YOLO/Ultralytics Runs and Checkpoints
+runs/
+bom_project/
+yolo_training/
+exports/
+exports_temp/
+*.pt
+*.onnx
+*.torchscript
+*.pkl
+
+# Compressed Archives
+*.zip
+*.tar
+*.gz
+
+# Virtual Environments
+env/
+venv/
+.env
+
+# Python Caches & System Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+.DS_Store
+
+# IDE and Project Settings
+.vscode/
+.idea/
