@@ -10,6 +10,7 @@ The codebase is organized into clean, modular subdirectories:
 
 ```text
 ├── colab/                    # YOLO Colab Notebooks & Inference
+│   ├── master_yolo_pipeline.ipynb # Combined End-to-End Orchestrator (Run All in One Session)
 │   ├── generate_dataset.ipynb# Phase 1: High-Fidelity SVG Extraction & Domain Randomization
 │   ├── train_model.ipynb     # Phase 2: Model Training, ONNX Benchmarks & Real-World Evaluation
 │   ├── test_real_floorplan.py# Command-line utility for local inference
@@ -86,7 +87,21 @@ This command:
 - Rejects any layouts with alignment scores `< 0.85`.
 
 ### 2. Run Google Colab Pipelines
-The pipeline is split into two notebooks to separate dataset synthesis from model training iteration:
+You can run the pipelines using either the consolidated **All-in-One Master Notebook** or the separate step-by-step notebooks:
+
+#### Option 1: Master Orchestrator (`colab/master_yolo_pipeline.ipynb`) - (Recommended)
+Run this notebook to execute the entire end-to-end pipeline continuously in a single Colab session:
+1. Mount Google Drive.
+2. Clone repository source processing modules.
+3. Parse, render, split, and augment the CubiCasa5K dataset.
+4. Train YOLO11s-Seg for 100 epochs.
+5. Export models to a versioned registry folder (`models/v1/`).
+6. Validate and benchmark the ONNX export.
+7. Run real-world evaluations, compute MAE counts, and classify hard example taxonomies.
+8. Automatically zip and back up all registry files directly to your Google Drive `/content/drive/MyDrive/BOM_Project/`.
+
+#### Option 2: Step-by-Step Execution
+If you prefer to separate dataset synthesis from model training iteration:
 
 #### Step A: Generate Dataset (`colab/generate_dataset.ipynb`)
 Run this notebook to:
