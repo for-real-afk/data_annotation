@@ -13,6 +13,7 @@ The codebase is organized into clean, modular subdirectories:
 │   ├── master_yolo_pipeline.ipynb # Combined End-to-End Orchestrator (Run All in One Session)
 │   ├── generate_dataset.ipynb# Phase 1: High-Fidelity SVG Extraction & Domain Randomization
 │   ├── train_model.ipynb     # Phase 2: Model Training, ONNX Benchmarks & Real-World Evaluation
+│   ├── train_good_ones.ipynb # Training on Curated Good Ones Subset & Upload Testing
 │   ├── test_real_floorplan.py# Command-line utility for local inference
 │   ├── metrics.json          # Metrics schema template
 │   └── door_metadata.json    # Target metadata schema template
@@ -122,6 +123,14 @@ Run this notebook on a Colab T4 GPU to:
 - Categorize failure taxonomies (weak confidence, false alarms, missed doors, window confusion) into `hard_examples/` folders.
 - Calculate door/window quantity takeoff MAE metrics (`bom_metrics.json`) and synthetic-to-real gap metrics (`domain_gap_report.json`).
 - Zip and backup the entire registry structure directly to Drive as `bom_training_bundle.zip`.
+
+#### Option 3: Curated Training & Upload Inference (`colab/train_good_ones.ipynb`)
+Run this notebook to train and test the model using your custom curated dataset `good_ones_dataset.zip`:
+- Unzips the high-quality 138-image dataset zip (either uploaded on-the-fly or loaded from Google Drive).
+- Automatically discovers nested folders and creates the required `dataset.yaml`.
+- Trains the YOLO11s-Seg model for 100 epochs.
+- Generates validation curves, confusion matrices, and precision/recall mAP charts.
+- Provides a **live test uploader**: upload any floorplan image from your PC to predict masks and print door/window takeoff counts directly in the notebook UI.
 
 ### 3. Local Real-World Inference Check
 Once training completes, use the local inference utility to check custom floorplan images:
