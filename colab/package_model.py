@@ -62,25 +62,17 @@ def package_artifacts(export_dir, training_run_dir, dataset_dir, zip_dest_dir, d
     if drive_backup_dir:
         print(f"Google Drive target backup directory: {drive_backup_dir}")
         try:
-            os.makedirs(drive_backup_dir, exist_ok=True)
+            # Recursively copy the entire export_dir (e.g. models/v1) to Drive
+            version_dir = os.path.basename(os.path.normpath(export_dir))
+            drive_version_dir = os.path.join(drive_backup_dir, "models", version_dir)
+            print(f" - Copying model registry recursively to Drive: {drive_version_dir}")
+            shutil.copytree(export_dir, drive_version_dir, dirs_exist_ok=True)
             
-            # Files to back up to Drive
-            drive_files = [
-                (os.path.join(export_dir, "best.pt"), "best.pt"),
-                (os.path.join(export_dir, "best.onnx"), "best.onnx"),
-                (os.path.join(export_dir, "best.torchscript"), "best.torchscript"),
-                (os.path.join(export_dir, "bom_model.pkl"), "bom_model.pkl"),
-                (bundle_zip_path, "bom_training_bundle.zip"),
-                (dataset_zip_path, "dataset_export.zip")
-            ]
-            
-            for src_file, dest_name in drive_files:
-                if os.path.exists(src_file):
-                    dst = os.path.join(drive_backup_dir, dest_name)
-                    shutil.copy2(src_file, dst)
-                    print(f" - Backed up to Drive: {dest_name}")
-                else:
-                    print(f" - Info: {src_file} not found, skipping Drive copy")
+            # Also back up the zip files to the root of Drive backup directory
+            for zip_file in [bundle_zip_path, dataset_zip_path]:
+                if os.path.exists(zip_file):
+                    shutil.copy2(zip_file, os.path.join(drive_backup_dir, os.path.basename(zip_file)))
+                    print(f" - Backed up zip file: {os.path.basename(zip_file)}")
             print("Google Drive backup completed successfully!")
         except Exception as e:
             print(f"Warning: Failed to back up files to Google Drive: {e}")

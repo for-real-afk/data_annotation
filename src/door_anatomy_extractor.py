@@ -216,7 +216,7 @@ def extract_door_svg_geometry(tag):
                 
     return segments, threshold_bbox, path_start, threshold_coords
 
-def extract_single_door_anatomy(tag, segments, threshold_bbox, path_start, threshold_coords, mapper, specific_curve=None):
+def extract_single_door_anatomy(tag, segments, threshold_bbox, path_start, threshold_coords, mapper, specific_curve=None, source_svg_file="model.svg", door_idx=0):
     """
     Extracts door anatomy for a single door curve/leaf set.
     """
@@ -283,7 +283,20 @@ def extract_single_door_anatomy(tag, segments, threshold_bbox, path_start, thres
     else:
         door_type = str(door_type)
         
+    # Calculate width_px and height_px (Hook 8 & Hook 3)
+    width_px = 0.0
+    if leaf_start_png and leaf_end_png:
+        width_px = float(np.linalg.norm(np.array(leaf_end_png) - np.array(leaf_start_png)))
+    # Standard height estimation on 2D view (usually standard CAD heights like 210cm)
+    # We set a standard CAD scaling multiplier (2.69 x width_px) or default to 210.0px
+    height_px = float(width_px * 2.69) if width_px > 0 else 210.0
+
+    parent_group = tag.parent.name if tag.parent else "svg"
+    parent_id = tag.parent.get("id", "") if tag.parent else ""
+    source_svg_group = f"{parent_group}#{parent_id}" if parent_id else parent_group
+    
     return {
+        "door_id": f"d_{door_idx}",
         "door_type": door_type,
         "bbox": bbox_png,
         "polygon": poly_png,
@@ -292,10 +305,16 @@ def extract_single_door_anatomy(tag, segments, threshold_bbox, path_start, thres
         "hinge": hinge_png,
         "leaf": leaf_png,
         "arc": arc_points_png,
+        "width_px": width_px,
+        "height_px": height_px,
+        "scale_available": False,
+        "source_class": door_type,
+        "source_svg_group": source_svg_group,
+        "source_svg_file": source_svg_file,
         "raw_geometry_count": len(segments)
     }
 
-def extract_door_info_cad(tag, mapper):
+def extract_door_info_cad(tag, mapper, source_svg_file="model.svg", door_idx=0):
     """
     Extracts door anatomy components (Hinge, Leaf, Arc) in global space,
     maps them to PNG space using mapper, and computes orientation, opening direction, etc.
@@ -310,12 +329,14 @@ def extract_door_info_cad(tag, mapper):
     if len(curves) > 1:
         # Multi-door extraction (double doors)
         results = []
-        for curve in curves:
-            res = extract_single_door_anatomy(tag, segments, threshold_bbox, path_start, threshold_coords, mapper, specific_curve=curve)
+        for i, curve in enumerate(curves):
+            res = extract_single_door_anatomy(tag, segments, threshold_bbox, path_start, threshold_coords, mapper, 
+                                              specific_curve=curve, source_svg_file=source_svg_file, door_idx=door_idx + i)
             if res:
                 results.append(res)
         return results
     else:
         # Single door extraction
         curve = curves[0] if len(curves) == 1 else None
-        return extract_single_door_anatomy(tag, segments, threshold_bbox, path_start, threshold_coords, mapper, specific_curve=curve)
+        return extract_single_door_anatomy(tag, segments, threshold_bbox, path_start, threshold_coords, mapper, 
+                                          specific_curve=curve, source_svg_file=source_svg_file, door_idx=door_idx)
