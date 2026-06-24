@@ -14,6 +14,7 @@ The codebase is organized into clean, modular subdirectories:
 │   ├── generate_dataset.ipynb# Phase 1: High-Fidelity SVG Extraction & Domain Randomization
 │   ├── train_model.ipynb     # Phase 2: Model Training, ONNX Benchmarks & Real-World Evaluation
 │   ├── train_good_ones.ipynb # Training on Curated Good Ones Subset & Upload Testing
+│   ├── train_yolo26.ipynb    # Training on Roboflow Export (206 Images) & Auto Task Detection
 │   ├── test_real_floorplan.py# Command-line utility for local inference
 │   ├── metrics.json          # Metrics schema template
 │   └── door_metadata.json    # Target metadata schema template
@@ -131,6 +132,19 @@ Run this notebook to train and test the model using your custom curated dataset 
 - Trains the YOLO11s-Seg model for 100 epochs.
 - Generates validation curves, confusion matrices, and precision/recall mAP charts.
 - Provides a **live test uploader**: upload any floorplan image from your PC to predict masks and print door/window takeoff counts directly in the notebook UI.
+
+#### Option 4: Curated Roboflow Training & Evaluation Pipeline (`colab/train_yolo26.ipynb`)
+Run this notebook to train a YOLO11 model on the Roboflow dataset `architecture_bom.yolo26.zip` (206 annotated images):
+- Locates the zip archive from Google Drive `/content/drive/MyDrive/BOM_Project/` or local `/content/`, falling back to direct browser upload if missing.
+- Extracts the zip files and automatically parses the folder structure.
+- Auto-detects the annotation task (Object Detection vs. Instance Segmentation) based on coordinates length in the label files to select the appropriate base weights (`yolo11s.pt` or `yolo11s-seg.pt`).
+- Dynamically rewrites internal `data.yaml` path fields to match the Colab session path.
+- Configures 100 epochs training using AdamW optimizer with cosine learning rate scheduling and GPU acceleration.
+- Implements checkpoint auto-resume (`last.pt`) and automatic fallback to a smaller batch size (`batch=8`) if a CUDA Out Of Memory error occurs.
+- Automatically saves checkpoints and evaluation plots directly to your Google Drive (`/content/drive/MyDrive/BOM_Project/roboflow_models/`) every 5 epochs.
+- Displays metrics, losses, confusion matrix, PR, and F1 curves directly.
+- Provides an interactive file uploader to test the model dynamically on custom floorplan images.
+
 
 ### 3. Local Real-World Inference Check
 Once training completes, use the local inference utility to check custom floorplan images:
